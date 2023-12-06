@@ -109,6 +109,7 @@ class HTTPClient(Client):
       response_cls=Response,
       json=dict(message=message, llm_config=llm_config, stop=stop, adapter_name=adapter_name),
       options={'max_retries': self._max_retries},
+    )
 
   def generate_stream(
     self, prompt, llm_config=None, stop=None, adapter_name=None, timeout=None, verify=None, **attrs
