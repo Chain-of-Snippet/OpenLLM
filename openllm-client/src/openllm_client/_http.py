@@ -94,6 +94,22 @@ class HTTPClient(Client):
       options={'max_retries': self._max_retries},
     )
 
+  def chat(self, message, llm_config=None, stop=None, adapter_name=None, timeout=None, verify=None, **attrs):
+    if timeout is None:
+      timeout = self._timeout
+    if verify is None:
+      verify = self._verify  # XXX: need to support this again
+    if llm_config is not None:
+      llm_config = {**self._config, **llm_config, **attrs}
+    else:
+      llm_config = {**self._config, **attrs}
+
+    return self._post(
+      f'/{self._api_version}/chat',
+      response_cls=Response,
+      json=dict(message=message, llm_config=llm_config, stop=stop, adapter_name=adapter_name),
+      options={'max_retries': self._max_retries},
+
   def generate_stream(
     self, prompt, llm_config=None, stop=None, adapter_name=None, timeout=None, verify=None, **attrs
   ) -> t.Iterator[StreamingResponse]:
